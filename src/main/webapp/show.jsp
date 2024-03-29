@@ -1,12 +1,6 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: chenkai
-  Date: 2024/3/29
-  Time: 10:45
-  To change this template use File | Settings | File Templates.
---%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page isELIgnored="false" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -59,15 +53,17 @@
 </head>
 <body>
 <header>
-    <h1>你好，${userName}!</h1>
+    <h1>你好，<s:property value="userName" />!</h1>
 </header>
 
 <nav>
     <ul>
-        <jsp:useBean id="menuList" scope="request" type="java.util.List"/>
-        <c:forEach var="menu" items="${menuList}">
-            <li><a href="${menu.menuUrl}">${menu.menuName}</a></li>
-        </c:forEach>
+        <s:iterator var="menu" value="menuList">
+            <s:set var="menuName" value="菜单名称" />
+            <s:set var="menuUrl" value="菜单链接" />
+            <li><a href="${menuUrl}">${menuName}</a></li>
+        </s:iterator>
+
     </ul>
 </nav>
 
