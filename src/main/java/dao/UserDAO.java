@@ -10,6 +10,7 @@ import pojo.User;
 import service.UserService;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static service.Impl.UserServiceImpl.sessionFactory;
@@ -38,5 +39,12 @@ public class UserDAO extends GenericDAO<User> {
     }
 
 
+    /*
+    * 查询所有用户
+    * */
+
+    public List<User> selectAllUser() {
+        return findAll();
+    }
 }
 

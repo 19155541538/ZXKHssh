@@ -19,23 +19,71 @@
             text-align: center;
         }
         nav {
-            float: left;
             width: 20%;
-            background-color: #f2f2f2;
+            background-color: #333;
             padding: 20px;
             box-sizing: border-box;
+            height: 100vh;
+            float: left;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.2);
         }
+
         nav ul {
             list-style-type: none;
             padding: 0;
+            margin: 0;
         }
+
         nav ul li {
             margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f4f4f4;
+            border-radius: 5px;
         }
+
+        nav ul li:hover {
+            background-color: #ddd;
+        }
+
         nav ul li a {
             text-decoration: none;
             color: #333;
+            display: block;
         }
+
+        nav ul li a:hover {
+            color: #000;
+            text-decoration: underline;
+        }
+        ul {
+            list-style-type: none; /* 移除列表标记 */
+            padding: 0; /* 移除默认的内边距 */
+            margin: 0; /* 移除默认的外边距 */
+            width: 100%; /* 或者你可以设置为具体的宽度，例如200px */
+        }
+
+        ul li {
+            margin-bottom: 10px; /* 列表项之间的间距 */
+            background-color: #f4f4f4; /* 背景色 */
+            border-radius: 5px; /* 圆角边框 */
+        }
+
+        ul li a {
+            display: block; /* 使链接填满整个列表项 */
+            text-decoration: none; /* 去除下划线 */
+            color: #333; /* 文字颜色 */
+            text-align: center; /* 文字居中 */
+            padding: 10px; /* 文字周围的空间 */
+        }
+
+        ul li:hover {
+            background-color: #ddd; /* 鼠标悬停时的背景色 */
+        }
+
+        ul li a:hover {
+            color: #000; /* 鼠标悬停时的文字颜色 */
+        }
+
         .content {
             float: left;
             width: 60%;
@@ -61,30 +109,33 @@
         <s:iterator var="menu" value="menuList">
             <s:set var="menuName" value="菜单名称" />
             <s:set var="menuUrl" value="菜单链接" />
-            <li><a href="${menuUrl}">${menuName}</a></li>
+            <li><a href="#" onclick="loadContent('${menuUrl}')">${menuName}</a></li>
         </s:iterator>
-
     </ul>
 </nav>
 
 <div class="content">
-    <h2>内容主体区域</h2>
-    <p>这里是内容主体，您可以添加任何JSP内容。</p>
-    <p>这是充数内容的一部分。</p>
-    <p>这是充数内容的一部分。</p>
-    <p>这是充数内容的一部分。</p>
-    <p>这是充数内容的一部分。</p>
-    <p>这是充数内容的一部分。</p>
-    <p>这是充数内容的一部分。</p>
-    <p>这是充数内容的一部分。</p>
-    <p>这是充数内容的一部分。</p>
-    <p>这是充数内容的一部分。</p>
-    <p>这是充数内容的一部分。</p>
+
 </div>
 
-<footer>
+<%--<footer>
     底部固定区域
-</footer>
+</footer>--%>
 </body>
+
+<script>
+    function loadContent(menuPage) {
+        // 发送Ajax请求
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                // 将获取到的内容渲染到页面中
+                document.querySelector('.content').innerHTML = xhr.responseText;
+            }
+        };
+        xhr.open('GET', menuPage, true);
+        xhr.send();
+    }
+</script>
 </html>
 

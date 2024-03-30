@@ -10,5 +10,8 @@
         <action name="login" class="action.LoginAction">
             <result name="success">/show.jsp</result>
         </action>
+        <action name="goUserPage" class="action.userAction.SelectUserAction">
+            <result name="goUserPage">/goUserPage.jsp</result>
+        </action>
     </package>
 </struts>
