@@ -5,6 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import pojo.Menu;
+import pojo.User;
 
 import java.util.List;
 
@@ -12,6 +13,10 @@ public class MenuDAO extends GenericDAO<Menu> {
 
     public MenuDAO(SessionFactory sessionFactory) {
         super(sessionFactory, Menu.class);
+    }
+
+    public MenuDAO(SessionFactory sessionFactory, Class<Menu> type) {
+        super(sessionFactory, type);
     }
 
     /*
@@ -25,4 +30,9 @@ public class MenuDAO extends GenericDAO<Menu> {
             return query.list();
         }
     }
+
+    public List<Menu> selectAllMenu() {
+        return findAll();
+    }
+
 }

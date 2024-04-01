@@ -66,5 +66,16 @@ public class Menu {
     public void setRole(Role role) {
         this.role = role;
     }
+
+    @Override
+    public String toString() {
+        return "Menu{" +
+                "menuId=" + menuId +
+                ", menuName='" + menuName + '\'' +
+                ", roleId=" + roleId +
+                ", menuUrl='" + menuUrl + '\'' +
+                ", role=" + role +
+                '}';
+    }
 }
 

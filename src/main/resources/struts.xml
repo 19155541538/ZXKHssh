@@ -2,16 +2,56 @@
         "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
         "http://struts.apache.org/dtds/struts-2.5.dtd">
 <struts>
-    <package name="default" extends="struts-default" namespace="/">
+    <package name="default" namespace="/" extends="json-default">
+
+
         <action name="hello" class="action.HelloAction">
             <result name="success">/show.jsp</result>
         </action>
 
         <action name="login" class="action.LoginAction">
             <result name="success">/show.jsp</result>
+            <result name="error">/error.jsp</result>
         </action>
         <action name="goUserPage" class="action.userAction.SelectUserAction">
             <result name="goUserPage">/goUserPage.jsp</result>
+        </action>
+        <action name="goMenuPage" class="action.MenuAction1.SelectMenuAction">
+            <result name="goMenuPage">/goMenuPage.jsp</result>
+        </action>
+
+        <!-- 新增用户请求 -->
+        <action name="addUser" class="action.userAction.AddUserAction">
+            <result name="success">/goUserPage.jsp</result>
+            <result name="error">/goUserPage.jsp</result>
+        </action>
+        <!-- 删除用户 -->
+        <action name="deleteUser" class="action.userAction.DelUserAction">
+            <result name="success">/goUserPage.jsp</result>
+            <result name="error">/goUserPage.jsp</result>
+        </action>
+
+        <!-- 修改用户信息  -->
+        <action name="editUser" class="action.userAction.UpdateUserAction">
+            <result name="success">/goUserPage.jsp</result>
+            <result name="error">/goUserPage.jsp</result>
+        </action>
+
+        <!-- 下面是Menu模块  -->
+
+        <!-- 新增 -->
+        <action name="addMenu" class="action.MenuAction1.AddMenuAction">
+            <result type="json">/goMenuPage.jsp</result>
+        </action>
+        <!-- 删除 -->
+        <action name="deleteMenu" class="action.MenuAction1.DelMenuAction">
+            <result type="json">/goMenuPage.jsp</result>
+        </action>
+
+
+        <!-- 修改 -->
+        <action name="editMenu" class="action.MenuAction1.UpdateMenuAction">
+            <result name="success">/goMenuPage.jsp</result>
         </action>
     </package>
 </struts>

@@ -122,20 +122,20 @@
     底部固定区域
 </footer>--%>
 </body>
-<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 
-<script type="text/javascript" charset="UTF-8">
-    if(typeof jQuery!='undefined'){
-        console.log("jquery加载成功");
-    }else {
-        console.log("jquery加载失败");
-    }
-</script>
 <script>
     function loadContent(menuPage) {
-        $('.content').load(menuPage);
+        // 发送Ajax请求
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                // 将获取到的内容渲染到页面中
+                document.querySelector('.content').innerHTML = xhr.responseText;
+            }
+        };
+        xhr.open('GET', menuPage, true);
+        xhr.send();
     }
-
 </script>
 </html>
 

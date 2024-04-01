@@ -127,6 +127,22 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", name='" + name + '\'' +
+                ", userName='" + userName + '\'' +
+                ", passWord='" + passWord + '\'' +
+                ", birthDate=" + birthDate +
+                ", roleId=" + roleId +
+                ", height=" + height +
+                ", gender=" + gender +
+                ", address='" + address + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                '}';
+    }
 }
 
 enum Gender {
