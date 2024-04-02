@@ -386,14 +386,29 @@
                 if (!response.ok) {
                     throw new Error('网络请求错误');
                 }
-                // 直接刷新页面
-                location.reload();
+                // 如果请求成功，关闭弹框
+                document.getElementById('editModal').style.display='none'
+                // 重新加载信息
+                reloadUserInfo(); // 假设reloadUserInfo是重新加载信息的函数
             })
             .catch(error => {
                 console.error('请求失败:', error);
             });
     });
+    
+    /* 刷新页面请求  */
+    function reloadUserInfo() {
+        $.get('/get_user_list', function(response) {
+            // 这里的 '/get_user_list' 是服务器上获取用户列表的API地址
+            // response 是服务器返回的用户列表数据
 
+            $('#user-list-div').html(''); // 清空现有的用户列表
+            response.forEach(function(user) {
+                // 遍历用户数据，更新到页面中
+                $('#user-list-div').append('<p>' + user.name + '</p>');
+            });
+        });
+    }
 
 
     function deleteUser(userId) {
@@ -424,22 +439,33 @@
 
 
 
-        document.getElementById('addUserForm').addEventListener('submit', function(e) {
-            e.preventDefault();  // 阻止表单的默认提交行为
+    document.getElementById('addUserForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // 阻止表单的默认提交行为
 
-            let formData = new FormData(this);  // 使用FormData对象收集数据
+        let formData = new FormData(this); // 使用FormData对象收集数据
 
-            fetch('addUser', {  // 'addUser'是服务器端的URL
-                method: 'POST',  // 请求方式
-                body: formData  // 发送到服务器的数据
+        fetch('addUser', { // 'addUser'是服务器端的URL
+            method: 'POST', // 请求方式
+            body: formData // 发送到服务器的数据
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('添加成功'); // 如果请求成功（通常是HTTP状态码200）
+                    // 发送另一个请求来获取更新后的数据
+                    return fetch('goUserPage'); // 假设'getUserData'是获取用户数据的服务器端URL
+                } else {
+                    throw new Error('添加失败'); // 如果请求失败，则抛出错误
+                }
             })
+            .catch(error => {
+                alert(error.message); // 捕获错误，并显示失败的消息
+            })
+            .finally(() => {
+                document.getElementById('myModal').style.display = 'none'; // 关闭模态框
+                window.location.reload(); // 刷新页面
+            });
+    });
 
-                .finally(() => {
-                    alert('添加成功'); // 不管请求成功还是失败，都显示添加成功的消息
-                    document.getElementById('myModal').style.display = 'none'; // 关闭模态框
-                    window.location.reload(); // 刷新页面
-                });
-        });
 
 
 

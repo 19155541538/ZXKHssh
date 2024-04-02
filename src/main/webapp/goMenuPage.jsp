@@ -147,7 +147,7 @@
         <span class="close" onclick="document.getElementById('myModal').style.display='none'">&times;</span>
         <h2>新增菜单</h2>
         <!-- 表单开始 -->
-        <form id="addMenuForm">
+        <form id="addMenuForm" onsubmit="event.preventDefault(); submitAddForm();">
             <div>
                 <label for="menuName">菜单名称：</label>
                 <input type="text" id="menuName" name="menu.menuName" required>
@@ -178,7 +178,7 @@
     <div class="modal-content">
         <span class="close" onclick="document.getElementById('editModal').style.display='none'">&times;</span>
         <h2>编辑菜单</h2>
-        <form id="editMenuForm">
+        <form id="editMenuForm" onsubmit="event.preventDefault(); submitEditForm();">
             <input type="hidden" id="editMenuId" name="menu.menuId">
             <div>
                 <label for="editMenuName">菜单名称：</label>
@@ -267,6 +267,27 @@
         }
     });
 
+    function submitAddForm() {
+        const formData = new FormData(document.getElementById('addMenuForm'));
+
+        fetch('addMenu', { // 'addMenu' 是服务器端的URL
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('菜单添加成功');
+                    document.getElementById('myModal').style.display = 'none'; // 关闭模态框
+                } else {
+                    throw new Error('菜单添加失败');
+                }
+            })
+            .catch(error => {
+                alert('添加过程中出现错误');
+                console.error('添加失败:', error);
+            });
+    }
+
 
     // 当用户点击模态框意外的区域，关闭它
     window.onclick = function(event) {
@@ -302,7 +323,7 @@
         const formData = new FormData(document.getElementById('editMenuForm'));
 
         // 发送 AJAX 请求保存编辑后的数据
-        fetch('editMenu', { // 'saveEditedMenu' 是保存编辑后数据的服务器端URL
+        fetch('editMenu', { // 'editMenu' 是保存编辑后数据的服务器端URL
             method: 'POST',
             body: formData
         })
@@ -310,12 +331,10 @@
                 if (response.ok) {
                     alert('菜单更新成功');
                     closeEditModal(); // 关闭编辑框
-                    window.location.reload(); // 刷新页面以显示更新后的数据
                 } else {
                     throw new Error('菜单更新失败');
                 }
             })
-            .then(da)
             .catch(error => {
                 alert('更新过程中出现错误');
                 console.error('更新失败:', error);

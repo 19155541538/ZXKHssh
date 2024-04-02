@@ -1,12 +1,12 @@
 package action.userAction;
 
-import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Action;
 import dao.UserDAO;
 import pojo.User;
 
 import static service.Impl.UserServiceImpl.sessionFactory;
 
-public class AddUserAction extends ActionSupport {
+public class AddUserAction implements Action {
 
     private User user;
     private  UserDAO userDAO;

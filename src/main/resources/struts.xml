@@ -33,15 +33,16 @@
 
         <!-- 修改用户信息  -->
         <action name="editUser" class="action.userAction.UpdateUserAction">
-            <result name="success">/goUserPage.jsp</result>
-            <result name="error">/goUserPage.jsp</result>
+            <result name="success" type="redirectAction">goUserPage</result>
+            <result name="error" type="redirectAction">goUserPage</result>
         </action>
 
         <!-- 下面是Menu模块  -->
 
         <!-- 新增 -->
         <action name="addMenu" class="action.MenuAction1.AddMenuAction">
-            <result type="json">/goMenuPage.jsp</result>
+            <result name="success">/goMenuPage.jsp</result>
+            <result name="error">/goMenuPage.jsp</result>
         </action>
         <!-- 删除 -->
         <action name="deleteMenu" class="action.MenuAction1.DelMenuAction">
@@ -53,5 +54,6 @@
         <action name="editMenu" class="action.MenuAction1.UpdateMenuAction">
             <result name="success">/goMenuPage.jsp</result>
         </action>
+
     </package>
 </struts>

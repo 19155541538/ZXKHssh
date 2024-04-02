@@ -135,7 +135,6 @@
     function loadContent(menuPage) {
         $('.content').load(menuPage);
     }
-
 </script>
 </html>
 
