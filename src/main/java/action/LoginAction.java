@@ -16,6 +16,8 @@ import util.HibernateUtil;
 import java.util.List;
 
 public class LoginAction implements Action {
+
+    private String errorMessage;
     private List<Menu> menuList;
     private String userName;
     private String passWord;
@@ -33,7 +35,9 @@ public class LoginAction implements Action {
 
 
 
-
+    /*
+    * 登陆
+    * */
     @Override
     public String execute() {
         System.out.println("前端传过来的名字：" + userName);
@@ -50,8 +54,17 @@ public class LoginAction implements Action {
             // 如果需要，可以将 menuList 存储到类成员变量中，以便在视图中使用
             return "success";
         } else {
-            return "error";
+            errorMessage = "密码错误";
+            return ERROR;
         }
+    }
+
+
+    /*
+    * 退出登陆
+    * */
+    public String logout(){
+        return SUCCESS;
     }
 
     public String getUserName() {
@@ -88,5 +101,13 @@ public class LoginAction implements Action {
 
     public List<Menu> getMenuList() {
         return menuList;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 }

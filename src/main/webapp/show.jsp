@@ -17,15 +17,32 @@
             color: #fff;
             padding: 10px;
             text-align: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            /* 确保header高度足够 */
+            height: 60px; /* 或根据实际情况调整 */
         }
+
         nav {
             width: 20%;
             background-color: #333;
             padding: 20px;
             box-sizing: border-box;
-            height: 100vh;
-            float: left;
-            box-shadow: 4px 0 10px rgba(0,0,0,0.2);
+            height: calc(100vh - 60px); /* 减去header的高度 */
+            position: fixed;
+            top: 60px; /* 从header的底部开始 */
+            left: 0;
+            z-index: 500;
+            overflow-y: auto; /* 如果内容超过视窗高度，允许滚动 */
+        }
+
+        .content {
+            margin-left: 20%; /* Adjust based on nav width */
+            margin-top: 60px; /* Adjust based on header height, ensure it's the same as header's height */
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         nav ul {
@@ -84,12 +101,6 @@
             color: #000; /* 鼠标悬停时的文字颜色 */
         }
 
-        .content {
-            float: left;
-            width: 60%;
-            padding: 20px;
-            box-sizing: border-box;
-        }
         footer {
             clear: both;
             background-color: #333;
@@ -97,11 +108,34 @@
             text-align: center;
             padding: 10px;
         }
+
+        /*   退出登录样式  */
+        .logout-button {
+            display: inline-block;
+            background-color: #f44336; /* 红色背景 */
+            color: white; /* 白色文字 */
+            text-align: center;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+        }
+
+        .logout-button:hover {
+            background-color: #d32f2f; /* 鼠标悬停时更深的红色 */
+        }
+
     </style>
 </head>
 <body>
 <header>
     <h1>你好，<s:property value="userName" />!</h1>
+    <a href="#" onclick="logout()" class="logout-button">退出登录</a>
 </header>
 
 <nav>
@@ -134,6 +168,21 @@
 <script>
     function loadContent(menuPage) {
         $('.content').load(menuPage);
+    }
+
+    function logout() {
+        fetch('logout', { method: 'POST' })
+            .then(response => {
+                if (response.ok) {
+                    alert('已退出');
+                    window.location.href = 'index.jsp'; // 重定向到 index.jsp
+                } else {
+                    alert('退出登录失败，请重试。');
+                }
+            })
+            .catch(error => {
+                console.error('请求失败:', error);
+            });
     }
 </script>
 </html>

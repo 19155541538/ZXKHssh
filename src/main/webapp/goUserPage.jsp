@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page isELIgnored="false" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 <html>
 <head>
     <title>用户管理</title>
@@ -8,7 +11,6 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
             background-color: #f0f0f0;
         }
         h1 {
@@ -162,6 +164,82 @@
             text-decoration: none;
             cursor: pointer;
         }
+        /* 编辑表单的样式 */
+        /* 表单样式 */
+        /* 编辑表单的样式 */
+        #editUserForm .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        #editUserForm label {
+            margin-right: 10px;
+            font-weight: bold;
+            white-space: nowrap;
+            flex-shrink: 0; /* 防止标签缩小 */
+        }
+
+        #editUserForm input[type="text"],
+        #editUserForm input[type="password"],
+        #editUserForm input[type="date"],
+        #editUserForm input[type="number"],
+        #editUserForm input[type="tel"],
+        #editUserForm select {
+            flex-grow: 1; /* 输入框占据剩余空间 */
+            flex-basis: 0; /* 输入框开始时没有基础长度，完全依赖于可用空间 */
+            min-width: 250px; /* 或更长的固定宽度 */
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        #editUserForm button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: auto; /* 按钮宽度自适应内容 */
+            margin-top: 10px; /* 与其他表单元素保持一致的外边距 */
+        }
+
+        #editUserForm button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        /* 分页控件的样式 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .pagination-link {
+            margin: 0 5px;
+            padding: 8px 16px;
+            background-color: #f0f0f0;
+            color: #333;
+            text-decoration: none;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            transition: background-color 0.3s;
+        }
+
+        .pagination-link.active,
+        .pagination-link:hover {
+            background-color: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .pagination-link:hover {
+            background-color: #3e8e41;
+        }
+
+
     </style>
 </head>
 <body>
@@ -285,7 +363,8 @@
 
 
 </div>
-<table>
+<table id="userTable">
+    <thead>
     <tr>
         <th>用户ID</th>
         <th>姓名</th>
@@ -298,33 +377,134 @@
         <th>电话号码</th>
         <th>操作</th>
     </tr>
-    <s:iterator value="userList" var="user">
-        <tr>
-            <td><s:property value="#user.userId"/></td>
-            <td><s:property value="#user.name"/></td>
-            <td><s:property value="#user.userName"/></td>
-            <td><s:date name="#user.birthDate" format="yyyy-MM-dd"/></td>
-            <td>
-                <s:if test="#user.roleId == 1">超级管理员</s:if>
-                <s:if test="#user.roleId == 2">普通管理员</s:if>
-            </td>
-            <td><s:property value="#user.height"/></td>
-            <td>
-                <s:property value="#user.gender"/> <!-- 这应该显示 'M' 或 'F' -->
-                <s:if test="#user.gender == 'M'">男</s:if>
-                <s:if test="#user.gender == 'F'">女</s:if>
-            </td>
-            <td><s:property value="#user.address"/></td>
-            <td><s:property value="#user.phoneNumber"/></td>
-            <td>
-                <button id="edit" class="edit" onclick="editUser(this.getAttribute('data-user-id'))" data-userid="<s:property value='#user.userId'/>">编辑</button>
-                <button id="delete" class="delete" onclick="deleteUser(this.getAttribute('data-user-id'))" data-user-id="<s:property value='#user.userId'/>">删除</button>
-            </td>
-        </tr>
+    </thead>
+    <tbody>
+    <!-- 行数据将被动态插入这里 -->
+        <s:iterator value="userList" var="user">
+    <tr>
+        <td><s:property value="#user.userId"/></td>
+        <td><s:property value="#user.name"/></td>
+        <td><s:property value="#user.userName"/></td>
+        <td><s:date name="#user.birthDate" format="yyyy-MM-dd"/></td>
+        <td>
+            <s:if test="#user.roleId == 1">超级管理员</s:if>
+            <s:if test="#user.roleId == 2">普通管理员</s:if>
+        </td>
+        <td><s:property value="#user.height"/></td>
+        <td>
+            <s:property value="#user.gender"/> <!-- 这应该显示 'M' 或 'F' -->
+            <s:if test="#user.gender == 'M'">男</s:if>
+            <s:if test="#user.gender == 'F'">女</s:if>
+        </td>
+        <td><s:property value="#user.address"/></td>
+        <td><s:property value="#user.phoneNumber"/></td>
+        <td>
+            <button id="edit" class="edit" onclick="editUser(this.getAttribute('data-user-id'))" data-userid="<s:property value='#user.userId'/>">编辑</button>
+            <button id="delete" class="delete" onclick="deleteUser(this.getAttribute('data-user-id'))" data-user-id="<s:property value='#user.userId'/>">删除</button>
+        </td>
+    </tr>
     </s:iterator>
+    </tbody>
+
+
 </table>
+<!-- 分页控件的HTML部分 -->
+
+<div>
+    <c:if test="${currentPage != 1}">
+        <a href="javascript:void(0)" onclick="changePage(1)">首页</a>
+        <a href="javascript:void(0)" onclick="changePage(${currentPage - 1})">上一页</a>
+    </c:if>
+    <c:forEach begin="1" end="${totalPages}" var="page">
+        <a href="javascript:void(0)" onclick="changePage(${page})" class="${page == currentPage ? 'current' : ''}">${page}</a>
+    </c:forEach>
+    <c:if test="${currentPage < totalPages}">
+        <a href="javascript:void(0)" onclick="changePage(${currentPage + 1})">下一页</a>
+        <a href="javascript:void(0)" onclick="changePage(${totalPages})">末页</a>
+    </c:if>
+</div>
+
+
+
+
+
 </body>
 <script>
+
+
+    function changePage(page) {
+        console.log(page)
+        // 构建请求的 URL
+        var url = "userByPage?currentPage=" + page;
+
+        // 使用 fetch API 发送 AJAX 请求
+        fetch(url)
+            .then(response => {
+                // 确保响应成功
+                if (!response.ok) {
+                    throw new Error('网络响应错误');
+                }
+                return response.json();  // 假设后端返回 JSON 数据
+            })
+            .then(data => {
+                // 这里处理响应的数据
+                // 更新页面内容
+                console.log("收到的数据:", data);
+                updatePageContent(data);  // 假设这个函数用于更新页面
+            })
+            .catch(error => {
+                console.error('请求失败:', error);
+            });
+
+        // 防止链接默认行为
+        return false;
+    }
+
+    function updatePageContent(data) {
+        // 根据返回的数据更新页面内容
+        console.log('更新页面内容', data);
+
+        // 获取 <tbody> 元素
+        const tbody = document.querySelector('tbody');
+
+        // 清空 <tbody> 中的内容
+        tbody.innerHTML = '';
+
+        // 检查是否存在 userList，并且它是一个有效的数组
+        if (data.userList && Array.isArray(data.userList)) {
+            // 遍历 userList，并为每个用户创建一个 <tr> 元素并添加到 <tbody> 中
+            data.userList.forEach(user => {
+                // 创建 <tr> 元素
+                const tr = document.createElement('tr');
+                // 添加用户信息到 <tr> 元素中
+                tr.innerHTML = `
+                <td>`+user.userId+`</td>
+                <td>`+user.name+`</td>
+                <td>`+user.userName+`</td>
+                <td>`+user.birthDate+`</td>
+                <td>` + (user.roleId == 1 ? '超级管理员' : '普通管理员') + `</td>
+                <td>`+user.height+`</td>
+                <td>` + (user.gender == 'M' ? '男' : '女') + `</td>
+                <td>`+user.address+`</td>
+                <td>`+user.phoneNumber+`</td>
+                <td>
+                    <button class="edit" onclick="editUser(${user.userId})" data-userid="${user.userId}">编辑</button>
+                    <button class="delete" onclick="deleteUser(${user.userId})" data-user-id="${user.userId}">删除</button>
+                </td>
+            `;
+                // 将 <tr> 添加到 <tbody> 中
+                tbody.appendChild(tr);
+            });
+
+        } else {
+            console.error('userList 不存在或不是有效的数组');
+        }
+    }
+
+
+
+
+
     // 确保这些函数在全局作用域中定义
     function editUser() {
         $('table').on('click', 'button.edit', function() {
@@ -388,15 +568,15 @@
                 }
                 // 如果请求成功，关闭弹框
                 document.getElementById('editModal').style.display='none'
-                // 重新加载信息
-                reloadUserInfo(); // 假设reloadUserInfo是重新加载信息的函数
+                // 如果更新成功，局部更新页面
+                loadContent('goUserPage'); // goUserPage 是返回页面局部内容的action
             })
             .catch(error => {
                 console.error('请求失败:', error);
             });
     });
-    
-    /* 刷新页面请求  */
+
+    /*/!* 刷新页面请求  *!/
     function reloadUserInfo() {
         $.get('/get_user_list', function(response) {
             // 这里的 '/get_user_list' 是服务器上获取用户列表的API地址
@@ -408,7 +588,7 @@
                 $('#user-list-div').append('<p>' + user.name + '</p>');
             });
         });
-    }
+    }*/
 
 
     function deleteUser(userId) {
@@ -426,7 +606,8 @@
                         throw new Error('删除失败');
                     }
                     alert('删除成功');
-                    location.reload(); // 刷新页面以更新表格
+                    // 如果更新成功，局部更新页面
+                    loadContent('goUserPage'); // goUserPage 是返回页面局部内容的action
                 })
                 .catch(error => {
                     console.error('删除用户出错:', error);
@@ -451,8 +632,8 @@
             .then(response => {
                 if (response.ok) {
                     alert('添加成功'); // 如果请求成功（通常是HTTP状态码200）
-                    // 发送另一个请求来获取更新后的数据
-                    return fetch('goUserPage'); // 假设'getUserData'是获取用户数据的服务器端URL
+                    // 如果更新成功，局部更新页面
+                    loadContent('goUserPage'); // goUserPage 是返回页面局部内容的action
                 } else {
                     throw new Error('添加失败'); // 如果请求失败，则抛出错误
                 }
@@ -462,7 +643,7 @@
             })
             .finally(() => {
                 document.getElementById('myModal').style.display = 'none'; // 关闭模态框
-                window.location.reload(); // 刷新页面
+                /*window.location.reload(); // 刷新页面*/
             });
     });
 

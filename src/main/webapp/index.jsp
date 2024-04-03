@@ -68,6 +68,9 @@
         <div class="form-group">
             <input type="submit" value="登陆" />
         </div>
+        <% if (request.getAttribute("errorMessage") != null) { %>
+        <script>alert('<%= request.getAttribute("errorMessage") %>');</script>
+        <% } %>
     </form>
 </div>
 </body>

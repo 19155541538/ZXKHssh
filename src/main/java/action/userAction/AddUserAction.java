@@ -11,19 +11,25 @@ public class AddUserAction implements Action {
     private User user;
     private  UserDAO userDAO;
 
+    private String errorMessage;
+
     public AddUserAction() {
         this.userDAO = new UserDAO(sessionFactory);
     }
 
     public String execute() {
-        System.out.println("进入到了新增用户的Action里面");
-        System.out.println("新增用户信息"+ user.toString());
-        User userAdd = userDAO.saveOrUpdate(user);
-        if (userAdd.getUserId() != null) {
-            // 用户添加成功，重定向到一个成功页面
-            return SUCCESS;
-        } else {
-            // 用户添加失败，重定向到一个错误页面
+        try {
+            System.out.println("进入到了新增用户的Action里面");
+            System.out.println("新增用户信息" + user.toString());
+            User userAdd = userDAO.saveOrUpdate(user);
+            if (userAdd.getUserId() != null) {
+                return SUCCESS;
+            } else {
+                this.setErrorMessage("用户添加失败，无法获取用户ID。");
+                return ERROR;
+            }
+        } catch (Exception e) {
+            this.setErrorMessage("用户添加异常：" + e.getMessage());
             return ERROR;
         }
     }
@@ -35,5 +41,13 @@ public class AddUserAction implements Action {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 }

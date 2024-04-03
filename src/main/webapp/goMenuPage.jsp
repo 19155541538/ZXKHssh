@@ -8,7 +8,6 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
             background-color: #f0f0f0;
         }
 
@@ -133,6 +132,36 @@
             text-decoration: none;
             cursor: pointer;
         }
+
+        /* 分页控件的样式 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .pagination-link {
+            margin: 0 5px;
+            padding: 8px 16px;
+            background-color: #f0f0f0;
+            color: #333;
+            text-decoration: none;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            transition: background-color 0.3s;
+        }
+
+        .pagination-link.active,
+        .pagination-link:hover {
+            background-color: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .pagination-link:hover {
+            background-color: #3e8e41;
+        }
+
     </style>
 
 </head>
@@ -187,8 +216,8 @@
             <div>
                 <label for="editRoleId">角色：</label>
                 <select id="editRoleId" name="menu.roleId">
-                    <option value="1">管理员</option>
-                    <option value="2">用户</option>
+                    <option value='1'>管理员</option>
+                    <option value='2'>普通用户</option>
                 </select>
             </div>
             <div>
@@ -228,8 +257,62 @@
         </tr>
     </s:iterator>
 </table>
+<!-- 分页控件的HTML部分 -->
+<div class="pagination">
+    <a href="#" class="pagination-link">&laquo;</a> <!-- 上一页 -->
+    <a href="#" class="pagination-link">1</a>
+    <a href="#" class="pagination-link active">2</a> <!-- 当前页 -->
+    <a href="#" class="pagination-link">3</a>
+    <a href="#" class="pagination-link">4</a>
+    <a href="#" class="pagination-link">5</a>
+    <a href="#" class="pagination-link">&raquo;</a> <!-- 下一页 -->
+</div>
+
 
 <script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var paginationLinks = document.querySelectorAll('.pagination-link');
+        paginationLinks.forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault(); // 阻止链接的默认行为
+                var page = this.getAttribute('data-page'); // 获取页码
+                fetchPageData(page); // 调用函数发送Ajax请求
+            });
+        });
+    });
+
+    function fetchPageData(page) {
+        // 使用fetch发送Ajax请求
+        // 假设服务器端有一个名为 'getPageData' 的API，能接收页码参数
+        fetch('getPageData?page=' + page, {
+            method: 'GET',
+            // 如果需要发送凭证（如cookies），可以设置 credentials: 'include'
+        })
+            .then(function(response) {
+                return response.text(); // 或者 response.json() 如果服务器返回JSON
+            })
+            .then(function(html) {
+                // 假设服务器返回新的分页内容的HTML
+                document.querySelector('.content').innerHTML = html; // 更新页面内容
+                // 更新分页导航的激活状态
+                updatePaginationActiveState(page);
+            })
+            .catch(function(error) {
+                console.error('请求失败:', error);
+            });
+    }
+
+    function updatePaginationActiveState(activePage) {
+        var paginationLinks = document.querySelectorAll('.pagination-link');
+        paginationLinks.forEach(function(link) {
+            if(link.getAttribute('data-page') === activePage) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+    }
     /*
     * 新增
     * */
@@ -255,7 +338,8 @@
                     .then(data => {
                         alert('添加成功');
                         document.getElementById('myModal').style.display = 'none'; // 关闭模态框
-                        window.location.reload(); // 刷新页面
+                        // 如果更新成功，局部更新页面
+                        loadContent('goMenuPage'); // goMenuPage 是返回页面局部内容的action
                     })
                     .catch(error => {
                         console.error('请求失败:', error);
@@ -277,6 +361,8 @@
             .then(response => {
                 if (response.ok) {
                     alert('菜单添加成功');
+                    // 如果更新成功，局部更新页面
+                    loadContent('goMenuPage'); // goMenuPage 是返回页面局部内容的action
                     document.getElementById('myModal').style.display = 'none'; // 关闭模态框
                 } else {
                     throw new Error('菜单添加失败');
@@ -297,6 +383,10 @@
         }
     }
 
+    var roleMap = {
+        '管理员': 1,
+        '普通用户': 2
+    };
     // 编辑按钮点击事件
     function editMenu(menuId, menuName, menuUrl) {
         // 获取菜单的行元素
@@ -304,13 +394,15 @@
 
         // 获取菜单的数据
         var name = row.find('td:nth-child(2)').text();
-        var roleId = row.find('td:nth-child(3)').text();
+        var roleName = row.find('td:nth-child(3)').text().trim(); // 获取角色名称
+        var roleId = roleMap[roleName]; // 使用映射获取角色ID
         var url = row.find('td:nth-child(4)').text();
 
+        console.log('角色ID：',roleId);
         // 填充编辑表单
         $('#editMenuId').val(menuId);
         $('#editMenuName').val(name);
-        $('#editRoleId').val(roleId); // 这里假设你有一个名为 'editRoleId' 的 select 元素
+        $('#editRoleId').val(roleId); // 确保这里的值与select中的option的value匹配
         $('#editMenuUrl').val(url);
 
         // 显示编辑模态框
@@ -331,6 +423,8 @@
                 if (response.ok) {
                     alert('菜单更新成功');
                     closeEditModal(); // 关闭编辑框
+                    // 如果更新成功，局部更新页面
+                    loadContent('goMenuPage'); // goMenuPage 是返回页面局部内容的action
                 } else {
                     throw new Error('菜单更新失败');
                 }
@@ -365,7 +459,7 @@
                 .then(response => {
                     if (response.ok) {
                         alert('删除成功');
-                        window.location.reload(); // 刷新页面以更新表格
+                        loadContent('goMenuPage'); // goMenuPage 是返回页面局部内容的action
                     } else {
                         throw new Error('删除失败');
                     }

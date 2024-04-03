@@ -8,13 +8,28 @@
         <action name="hello" class="action.HelloAction">
             <result name="success">/show.jsp</result>
         </action>
-
+        <!-- 登陆和退出登陆  -->
         <action name="login" class="action.LoginAction">
             <result name="success">/show.jsp</result>
-            <result name="error">/error.jsp</result>
+            <result name="error">/index.jsp</result>
         </action>
+        <action name="logout" class="action.LoginAction" method="logout">
+            <result name="success">/index.jsp</result>
+        </action>
+
         <action name="goUserPage" class="action.userAction.SelectUserAction">
-            <result name="goUserPage">/goUserPage.jsp</result>
+            <result name="success">/goUserPage.jsp</result>
+        </action>
+
+
+        <!-- 分页查询  -->
+        <action name="userByPage" class="action.userAction.SelectUserAction">
+            <result name="success" type="json">
+
+            </result>
+            <result name="error" type="json">
+
+            </result>
         </action>
         <action name="goMenuPage" class="action.MenuAction1.SelectMenuAction">
             <result name="goMenuPage">/goMenuPage.jsp</result>
@@ -22,37 +37,65 @@
 
         <!-- 新增用户请求 -->
         <action name="addUser" class="action.userAction.AddUserAction">
-            <result name="success">/goUserPage.jsp</result>
-            <result name="error">/goUserPage.jsp</result>
+            <result name="success" type="json">
+
+            </result>
+            <result name="error" type="json">
+
+            </result>
         </action>
         <!-- 删除用户 -->
         <action name="deleteUser" class="action.userAction.DelUserAction">
-            <result name="success">/goUserPage.jsp</result>
-            <result name="error">/goUserPage.jsp</result>
+            <result name="success" type="json">
+                <!-- 可选的属性配置 -->
+            </result>
+            <result name="error" type="json">
+                <!-- 可选的属性配置 -->
+            </result>
         </action>
 
         <!-- 修改用户信息  -->
         <action name="editUser" class="action.userAction.UpdateUserAction">
-            <result name="success" type="redirectAction">goUserPage</result>
-            <result name="error" type="redirectAction">goUserPage</result>
+            <result name="success" type="json">
+                <!-- 可选的属性配置 -->
+            </result>
+            <result name="error" type="json">
+                <!-- 可选的属性配置 -->
+            </result>
         </action>
 
         <!-- 下面是Menu模块  -->
 
         <!-- 新增 -->
         <action name="addMenu" class="action.MenuAction1.AddMenuAction">
-            <result name="success">/goMenuPage.jsp</result>
-            <result name="error">/goMenuPage.jsp</result>
+            <result name="success" type="json">
+                <!-- 可选的属性配置 -->
+            </result>
+            <result name="error" type="json">
+                <!-- 可选的属性配置 -->
+            </result>
         </action>
         <!-- 删除 -->
         <action name="deleteMenu" class="action.MenuAction1.DelMenuAction">
-            <result type="json">/goMenuPage.jsp</result>
+            <result name="success" type="json">
+                <!-- 可选的属性配置 -->
+            </result>
+            <result name="error" type="json">
+                <!-- 可选的属性配置 -->
+            </result>
         </action>
 
 
         <!-- 修改 -->
         <action name="editMenu" class="action.MenuAction1.UpdateMenuAction">
-            <result name="success">/goMenuPage.jsp</result>
+            <result name="success">
+                <!-- 可选的属性配置 -->
+                /goMenuPage.jsp
+            </result>
+            <result name="error">
+                <!-- 可选的属性配置 -->
+                /goMenuPage.jsp
+            </result>
         </action>
 
     </package>
