@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page isELIgnored="false" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>菜单管理</title>
@@ -233,7 +234,8 @@
 
 
 
-<table>
+<table id="menuTable">
+    <thead>
     <tr>
         <th>菜单ID</th>
         <th>菜单名称</th>
@@ -241,6 +243,8 @@
         <th>菜单URL</th>
         <th>操作</th>
     </tr>
+    </thead>
+    <tbody>
     <s:iterator value="menuList" var="menu">
         <tr>
             <td><s:property value="#menu.menuId"/></td>
@@ -256,20 +260,82 @@
             </td>
         </tr>
     </s:iterator>
+    </tbody>
 </table>
 <!-- 分页控件的HTML部分 -->
-<div class="pagination">
-    <a href="#" class="pagination-link">&laquo;</a> <!-- 上一页 -->
-    <a href="#" class="pagination-link">1</a>
-    <a href="#" class="pagination-link active">2</a> <!-- 当前页 -->
-    <a href="#" class="pagination-link">3</a>
-    <a href="#" class="pagination-link">4</a>
-    <a href="#" class="pagination-link">5</a>
-    <a href="#" class="pagination-link">&raquo;</a> <!-- 下一页 -->
-</div>
+<!-- 分页控件的HTML部分，仅当总页数大于1时显示 -->
+<c:if test="${totalPages > 1}">
+    <div>
+        <c:if test="${currentPage != 1}">
+            <a href="javascript:void(0)" onclick="changePage(1)">首页</a>
+            <a href="javascript:void(0)" onclick="changePage(${currentPage - 1})">上一页</a>
+        </c:if>
+        <c:forEach begin="1" end="${totalPages}" var="page">
+            <a href="javascript:void(0)" onclick="changePage(${page})" class="${page == currentPage ? 'current' : ''}">${page}</a>
+        </c:forEach>
+        <c:if test="${currentPage < totalPages}">
+            <a href="javascript:void(0)" onclick="changePage(${currentPage + 1})">下一页</a>
+            <a href="javascript:void(0)" onclick="changePage(${totalPages})">末页</a>
+        </c:if>
+    </div>
+</c:if>
+
 
 
 <script>
+
+    function changePage(page) {
+        console.log(page)
+        // 构建请求的 URL
+        var url = "menuByPage?currentPage=" + page;
+
+        // 使用 fetch API 发送 AJAX 请求
+        fetch(url)
+            .then(response => {
+                // 确保响应成功
+                if (!response.ok) {
+                    throw new Error('网络响应错误');
+                }
+                return response.json();  // 假设后端返回 JSON 数据
+            })
+            .then(data => {
+                // 这里处理响应的数据
+                // 更新页面内容
+                console.log("收到的数据:", data);
+                updatePageContent(data);  // 假设这个函数用于更新页面
+            })
+            .catch(error => {
+                console.error('请求失败:', error);
+            });
+
+        // 防止链接默认行为
+        return false;
+    }
+
+    function updatePageContent(data) {
+        const tbody =  document.querySelector('#menuTable tbody') // 正确选择现有的<tbody>
+
+        tbody.innerHTML = ''; // 清空现有行数据
+
+        // 填充新的行数据
+        data.menuList.forEach(menu => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>`+menu.menuId+`</td>
+                <td>`+menu.menuName+`</td>
+                <td>` + (menu.roleId == 1 ? '超级管理员' : '普通管理员') + `</td>
+                <td>`+menu.menuUrl+`</td>
+                <td>
+                    <button class="edit" onclick="editMenu( ` +menu.menuId+ ` )" data-userid="` +menu.menuId+ `">编辑</button>
+                    <button class="delete" onclick="deleteMenu( ` +menu.menuId+ `)" data-user-id="` +menu.menuId+ `">删除</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+
+
 
     document.addEventListener('DOMContentLoaded', function() {
         var paginationLinks = document.querySelectorAll('.pagination-link');

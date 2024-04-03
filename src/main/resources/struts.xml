@@ -22,7 +22,7 @@
         </action>
 
 
-        <!-- 分页查询  -->
+        <!--用户   分页查询  -->
         <action name="userByPage" class="action.userAction.SelectUserAction">
             <result name="success" type="json">
 
@@ -31,8 +31,19 @@
 
             </result>
         </action>
+
+        <!-- 按钮分页查询  -->
+        <action name="menuByPage" class="action.MenuAction1.SelectMenuAction">
+            <result name="success" type="json">
+
+            </result>
+            <result name="error" type="json">
+
+            </result>
+        </action>
+
         <action name="goMenuPage" class="action.MenuAction1.SelectMenuAction">
-            <result name="goMenuPage">/goMenuPage.jsp</result>
+            <result name="success">/goMenuPage.jsp</result>
         </action>
 
         <!-- 新增用户请求 -->

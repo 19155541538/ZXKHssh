@@ -41,13 +41,20 @@ public class SelectMenuAction implements Action {
         // 分页查询
         menuList = menuDAO.selectMenusByPage(currentPage, size); // 假设这个方法存在，用于按页查询菜单
 
+        System.out.println("当前页码是："+ currentPage);
+
+        for (Menu m: menuList) {
+            System.out.println(m.toString());
+        }
+
+
         // 设置请求属性
         request.setAttribute("menuList", menuList);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalItems", totalItems);
 
-        return "goMenuPage";
+        return SUCCESS;
     }
 
     /*

@@ -211,33 +211,7 @@
         }
 
         /* 分页控件的样式 */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            padding: 20px;
-        }
 
-        .pagination-link {
-            margin: 0 5px;
-            padding: 8px 16px;
-            background-color: #f0f0f0;
-            color: #333;
-            text-decoration: none;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            transition: background-color 0.3s;
-        }
-
-        .pagination-link.active,
-        .pagination-link:hover {
-            background-color: #4CAF50;
-            color: white;
-            border-color: #4CAF50;
-        }
-
-        .pagination-link:hover {
-            background-color: #3e8e41;
-        }
 
 
     </style>
@@ -488,8 +462,8 @@
                 <td>`+user.address+`</td>
                 <td>`+user.phoneNumber+`</td>
                 <td>
-                    <button class="edit" onclick="editUser(${user.userId})" data-userid="${user.userId}">编辑</button>
-                    <button class="delete" onclick="deleteUser(${user.userId})" data-user-id="${user.userId}">删除</button>
+                    <button class="edit" onclick="editUser(` +user.userId+ `)" data-userid="` + user.userId+ `">编辑</button>
+                    <button class="delete" onclick="deleteUser(` +user.userId+ `)" data-user-id="` +user.userId+ `">删除</button>
                 </td>
             `;
                 // 将 <tr> 添加到 <tbody> 中
@@ -575,21 +549,6 @@
                 console.error('请求失败:', error);
             });
     });
-
-    /*/!* 刷新页面请求  *!/
-    function reloadUserInfo() {
-        $.get('/get_user_list', function(response) {
-            // 这里的 '/get_user_list' 是服务器上获取用户列表的API地址
-            // response 是服务器返回的用户列表数据
-
-            $('#user-list-div').html(''); // 清空现有的用户列表
-            response.forEach(function(user) {
-                // 遍历用户数据，更新到页面中
-                $('#user-list-div').append('<p>' + user.name + '</p>');
-            });
-        });
-    }*/
-
 
     function deleteUser(userId) {
         console.log(userId);
